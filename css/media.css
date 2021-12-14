@@ -1,0 +1,19 @@
+@media (max-width: 430px) {
+  .form-calculator {
+    width: 100%; }
+  span {
+    font-size: 13px !important; }
+  .navigation li {
+    padding: 0 10px; }
+  .main {
+    padding: 0 10px; }
+  .result-block #average-kilometers-consuming,
+  .result-block #distance-consuming {
+    padding: 0 10px; } }
+
+@media (max-width: 380px) {
+  .result-block .input-item {
+    display: flex !important;
+    flex-direction: column; }
+    .result-block .input-item span {
+      padding-bottom: 5px; } }

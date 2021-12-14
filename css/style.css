@@ -1,0 +1,139 @@
+.form-calculator .navigation li.active {
+  background: #5029ee;
+  color: #fff; }
+
+.form-calculator .main, .form-calculator .result-block {
+  border-bottom-right-radius: 25px;
+  border-bottom-left-radius: 25px; }
+
+body {
+  font-family: "Roboto", sans-serif;
+  background: #afafaf; }
+
+.form-calculator {
+  margin: 100px auto;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  color: #000;
+  font-size: 14px; }
+  .form-calculator #distance-consuming {
+    display: none; }
+  .form-calculator .navigation {
+    width: auto; }
+    .form-calculator .navigation nav {
+      display: flex; }
+    .form-calculator .navigation a {
+      text-decoration: none;
+      color: inherit; }
+    .form-calculator .navigation li {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      list-style: none;
+      height: 55px;
+      width: 200px;
+      background: #fff;
+      color: #5029ee;
+      border-bottom: 3px solid #5029ee;
+      border-top-left-radius: 25px; }
+      .form-calculator .navigation li:hover {
+        cursor: pointer; }
+      .form-calculator .navigation li:nth-child(2) {
+        border-radius: none;
+        border-top-right-radius: 25px;
+        border-top-left-radius: 0; }
+  .form-calculator .inputs-block {
+    color: #5029ee;
+    font-weight: 500; }
+    .form-calculator .inputs-block .input-item {
+      width: 100%;
+      display: grid;
+      align-items: center;
+      grid-template-columns: 1fr 1fr;
+      margin-top: 20px; }
+      .form-calculator .inputs-block .input-item:first-child {
+        margin-top: 0; }
+      .form-calculator .inputs-block .input-item span:first-child {
+        text-align: right;
+        padding-right: 20px; }
+    .form-calculator .inputs-block .input-box {
+      display: flex;
+      width: 85%; }
+    .form-calculator .inputs-block .input-box span {
+      font-weight: 400;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-top-right-radius: 16px;
+      border-bottom-right-radius: 16px;
+      width: 50%;
+      color: #fff;
+      background: #5029ee; }
+    .form-calculator .inputs-block input {
+      padding-left: 25px;
+      width: 36%;
+      border-top-left-radius: 16px;
+      border-bottom-left-radius: 16px;
+      border: 1px solid #5029ee;
+      height: 40px; }
+      .form-calculator .inputs-block input::-webkit-outer-spin-button, .form-calculator .inputs-block input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0; }
+  .form-calculator .main {
+    background: #fff; }
+    .form-calculator .main .tab {
+      display: none; }
+    .form-calculator .main .active {
+      display: block !important; }
+    .form-calculator .main .text p {
+      margin: 20px;
+      font-weight: 300; }
+    .form-calculator .main .buttons-block {
+      padding-bottom: 20px;
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: 1fr 1fr; }
+      .form-calculator .main .buttons-block .btn {
+        width: 85%;
+        border-radius: 16px;
+        border: 1px solid #5029ee;
+        background: none;
+        color: #5029ee;
+        font-weight: 700;
+        height: 40px; }
+        .form-calculator .main .buttons-block .btn:hover {
+          cursor: pointer;
+          opacity: 0.8; }
+        .form-calculator .main .buttons-block .btn:first-child {
+          margin-left: auto;
+          margin-right: 17px; }
+        .form-calculator .main .buttons-block .btn:nth-child(2) {
+          background: #5029ee80;
+          color: #fff; }
+      .form-calculator .main .buttons-block .btn.active-btn {
+        background: #5029ee; }
+  .form-calculator .main-border-hide {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px; }
+  .form-calculator .result-block {
+    background: #5029ee;
+    color: #fff; }
+    .form-calculator .result-block .input-item:first-child {
+      margin-top: 20px; }
+    .form-calculator .result-block .input-item:last-child {
+      padding-bottom: 20px; }
+    .form-calculator .result-block .input-item input {
+      font-weight: 700; }
+    .form-calculator .result-block .input-item .input-box input,
+    .form-calculator .result-block .input-item .input-box span {
+      color: #fff;
+      background: #5029ee;
+      border: 1px solid #fff; }
+    .form-calculator .result-block #average-kilometers-consuming,
+    .form-calculator .result-block #distance-consuming {
+      display: none; }
+  .form-calculator .active-result {
+    display: block !important; }
