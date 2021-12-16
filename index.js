@@ -122,7 +122,7 @@ function activeCalcButton(arrayOfInputs) {
 	let filledInputs = 0
 
 	arrayOfInputs.forEach(input => {
-		if(input.value) {
+		if(input.value > 0) {
 			filledInputs++
 		}
 	})
@@ -138,7 +138,7 @@ function activeCalcButton(arrayOfInputs) {
 		input.addEventListener('input', () => {
 			let values = []
 			arrayOfInputs.forEach(itm => values.push(itm.value))
-			calculateBtn.disabled = values.includes('')
+			calculateBtn.disabled = values.includes('') || values.some(v => v < 0)
 
 			if(!calculateBtn.disabled) {
 				calculateBtn.className = 'btn active-btn'
@@ -181,7 +181,8 @@ function inputClear() {
 }
 
 function validateInputs (...args) {
-	const validatedInputs = args.filter(item => item).length;
+	
+	const validatedInputs = args.filter(item => item > 0).length;
 
 	if (validatedInputs == args.length) {
 		return true
@@ -223,6 +224,8 @@ function convertDecimals(...args) {
 	})
 }
 
+
+
 function calculateResult() {
 		if (checkActiveTab() == 'average-kilometers-consuming') {
 
@@ -247,7 +250,7 @@ function calculateResult() {
 					avgConsumingForm.resultBlockShowed = true
 				
 				} else {
-					alert('There is an empty input field')
+					alert('There is an empty input field or negative number')
 				}
 			} else {
 				if (validateInputs(distanceConsumingForm.fuelConsumed.value, distanceConsumingForm.distance.value, distanceConsumingForm.fuelPrice.value)) {
@@ -271,7 +274,7 @@ function calculateResult() {
 
 					distanceConsumingForm.resultBlockShowed = true
 				} else {
-					alert('There is an empty input field')
+					alert('There is an empty input field or negative number')
 				}
 			}
 }
