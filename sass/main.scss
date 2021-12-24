@@ -52,7 +52,7 @@ body {
     }
 
     li {
-      display: flex;
+      display: flex !important;
       align-items: center;
       justify-content: center;
 
@@ -234,9 +234,26 @@ body {
     #distance-consuming {
       display: none;
     }
+
+    input[name="fuel_consuming_span"],
+    input[name="total_price_span"] {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-top-right-radius: $border-radius-input !important;
+      border-bottom-right-radius: $border-radius-input !important;
+      padding-left: 12px !important;
+      font-weight: 400;
+
+      // disable inputs
+      pointer-events: none;
+    }
   }
 
   .active-result {
     display: block !important;
   }
+}
+
+.hide {
+  display: none;
 }

@@ -1,292 +1,276 @@
+let activeTabId = '1';
+
+window.addEventListener("load", function(event) {
+    activeCalcButton()
+  });
+
+
 // Changing tabs
-
 function onTabClick(event) {
-	const activeTabs = document.querySelectorAll('.active');
+  const userSelectedTabId = event.target.dataset.tab;
 
+  activeTabId = userSelectedTabId;
 
-	// deactive existing active tab and panel
-	activeTabs.forEach((tab) => {
-		tab.classList.toggle('active') 
-	})
+  let tabs = document.querySelectorAll(".navigation li");
+  let tabPanels = document.querySelectorAll(".tabs-wrapper div");
 
-	// active new tab and panel
-	event.target.classList.toggle('active')
-	
-	document.querySelector(event.target.id).className = 'tab active'
-	const avgKmConsum = 'average-kilometers-consuming'
-	const distConsum = 'distance-consuming'
+  //   display results block depending on tab show attribute
+  hideShowResult();
 
-	if (document.querySelector(event.target.id).id == avgKmConsum) {
-			activeCalcButton(avgConsumingForm.averageConsumingInputs) 
-		
-		if (avgConsumingForm.resultBlockShowed) {
-			hideShowResult(distanceConsumingForm.distConsumRes, avgConsumingForm.avgRes)
-			showMainBorder()
-		} else {
-			mainBlock.classList.replace("main-border-hide", null);
-			hideAllResult()
-		}
+  // deactive existing active tab and panel
+  tabs.forEach((tab) => {
+    calculateBtn.disabled = false
+    activeCalcButton();
+    if (tab.dataset.tab === userSelectedTabId) {
+      tab.classList.add("active");
+    } else {
+      tab.classList.remove("active");
+    }
+  });
+  
+  tabPanels.forEach((tabPanel) => {
 
-	} else if (document.querySelector(event.target.id).id == distConsum) {
-		activeCalcButton(distanceConsumingForm.distanceConsumInputs) 
+    if (tabPanel.dataset.tabpanel === userSelectedTabId) {
+      calculateByEnter()
+      tabPanel.classList.add("active");
+    } else {
+      tabPanel.classList.remove("active");
+    }
+  });
 
-		if (distanceConsumingForm.resultBlockShowed) {
-			hideShowResult(avgConsumingForm.avgRes, distanceConsumingForm.distConsumRes)
-			showMainBorder()
-		} else {
-			mainBlock.classList.replace("main-border-hide", null);
-			hideAllResult()
-
-		}
-	}
 
 }
 
-const element = document.querySelector('.navigation');
 
-element.addEventListener('click', onTabClick, false);
+const toggleAttribute = (attributeName, value) => {
+  const node = checkActiveTab();
+  node.dataset[attributeName] = value;
+};
+
+const element = document.querySelector(".navigation");
+
+element.addEventListener("click", onTabClick, false);
 
 
-// calculator 
-
-// inputs average consuming form
-
-const avgConsumingForm = {
-	fuelConsumed: document.querySelector('#fuel_consumed'),
-	distance: document.querySelector('#reached_distance'),
-	fuelPrice: document.querySelector('#fuel_price'),
-
-	averageConsuming: document.querySelector('#average_consuming'),
-	avgPricePerKm: document.querySelector('#avg_price_per_km'),
-	totalPrice: document.querySelector('#total_price'),
-
-	averageConsumingInputs: document.querySelectorAll('#average-kilometers-consuming .input-field[type="number"]'),
-	avgRes: document.querySelector('.result-block.inputs-block #average-kilometers-consuming'),
-
-	resultBlockShowed: false
+// Let user calculate by pressing "Enter" button
+function calculateByEnter() {
+  getActiveInputs()['allInputsIntab'].forEach((input) => {
+    input.addEventListener("keydown", (event) => {
+      if (event.code === "Enter" || event.code === 'NumpadEnter') {
+        calculateResult();
+      }
+    });
+  });
 }
 
-// inputs distance consuming form
-
-const distanceConsumingForm = {
-	fuelConsumed: document.querySelector('#fuel_auto_consumed'),
-	distance: document.querySelector('#travelling_distance'),
-	fuelPrice: document.querySelector('#distance-consuming #fuel_price'),
-
-	fuelConsuming: document.querySelector('#distance-consuming #fuel_consuming'),
-	avgPricePerKm: document.querySelector('#distance-consuming #avg_perKm'),
-	totalPrice: document.querySelector('#distance-consuming #total_price'),
-
-	distanceConsumInputs: document.querySelectorAll('#distance-consuming .input-field[type="number"]'),
-	distConsumRes: document.querySelector('.result-block.inputs-block #distance-consuming'),
-
-	fuelConsumingSpan: document.querySelector('#fuel_consuming_span'),
-	totalPriceSpan: document.querySelector('#total_price_span'),
-
-	resultBlockShowed: false
-}
-
-
-function calculateByEnter(arrayOfInputs) {
-	arrayOfInputs.forEach(input => {
-		input.addEventListener('keydown', (event) => {
-			if(event.code === 'Enter' || event.code === 'NumpadEnter') {
-				calculateResult()
-			}
-		})
-	})
-}
-
-calculateByEnter(avgConsumingForm.averageConsumingInputs)
-calculateByEnter(distanceConsumingForm.distanceConsumInputs)
-
-
+calculateByEnter()
 
 // buttons
-const clearBtn = document.querySelector('#clear');
-const calculateBtn = document.querySelector('#calculate');
+const clearBtn = document.querySelector("#clear");
+const calculateBtn = document.querySelector("#calculate");
 
-let formProps = {
-	currentTab: 'average-kilometers-consuming',
-	currentTabResult: false
+
+const mainBlock = document.querySelector(".main");
+
+// calculateBtn.disabled = true;
+
+function activeCalcButton() {
+
+  const {allInputsIntab: arrayOfInputs} = getActiveInputs()
+  // Check if there are filled inputs
+  let filledInputs = 0;
+
+  arrayOfInputs.forEach((input) => {
+    if (Number(input.value) > 0) {
+      filledInputs++;
+    }
+  });
+
+
+  if (filledInputs < arrayOfInputs.length) {
+    calculateBtn.classList.remove('active-btn')
+  } else {
+    calculateBtn.classList.add('active-btn')
+  }
+
+  arrayOfInputs.forEach((input) => {
+    input.addEventListener("input", () => {
+      let values = [];
+      arrayOfInputs.forEach((itm) => values.push(itm.value.trim()));
+
+      calculateBtn.disabled = values.includes("") || values.some(v => v < 0);
+
+      if (!calculateBtn.disabled) {
+        calculateBtn.className = "btn active-btn";
+      } else {
+        calculateBtn.className = "btn";
+      }
+    });
+  });
 }
-const mainBlock = document.querySelector('.main');
-
-calculateBtn.disabled = true
-
-
-function activeCalcButton(arrayOfInputs) {
-
-
-	// Check if there are filled inputs 
-	let filledInputs = 0
-
-	arrayOfInputs.forEach(input => {
-		if(input.value > 0) {
-			filledInputs++
-		}
-	})
-
-	if (filledInputs < arrayOfInputs.length) {
-		calculateBtn.className = 'btn'
-	} else {
-		calculateBtn.className = 'btn active-btn'
-	}
-
-
-	arrayOfInputs.forEach(input => {
-		input.addEventListener('input', () => {
-			let values = []
-			arrayOfInputs.forEach(itm => values.push(itm.value))
-			calculateBtn.disabled = values.includes('') || values.some(v => v < 0)
-
-			if(!calculateBtn.disabled) {
-				calculateBtn.className = 'btn active-btn'
-			} else {
-				calculateBtn.className = 'btn'
-			}
-		})
-	})
-
-
-}
-
-activeCalcButton(avgConsumingForm.averageConsumingInputs) 
-activeCalcButton(distanceConsumingForm.distanceConsumInputs) 
 
 function inputClear() {
+  const activeBottomBlock = document.querySelector(
+    `.result-block #${checkActiveTab().id}`
+  );
+  const currentInputsBlock = document.querySelectorAll(
+    `.main #${checkActiveTab().id} input`
+  );
+  currentInputsBlock.forEach((input) => {
+    input.value = "";
+  });
+  activeBottomBlock.classList.remove("active-result");
+  mainBlock.classList.remove("main-border-hide");
 
-
-	if(avgConsumingForm.avgRes.classList[0]) {
-		avgConsumingForm.avgRes.classList.replace('active-result', null)
-		mainBlock.classList.replace('main-border-hide', null)
-		avgConsumingForm.resultBlockShowed = false
-	} else if (distanceConsumingForm.distConsumRes.classList[0]) {
-		distanceConsumingForm.distConsumRes.classList.replace('active-result', null)
-		mainBlock.classList.replace('main-border-hide', null)
-		distanceConsumingForm.resultBlockShowed = false
-	}
-	
-
-	if (checkActiveTab() == 'average-kilometers-consuming') {
-		avgConsumingForm.averageConsumingInputs.forEach((item) => {
-			item.value = ''
-		})
-	} else {
-		distanceConsumingForm.distanceConsumInputs.forEach((item) => {
-			item.value = ''
-		})
-	}
-	
+  calculateBtn.disabled = true
 }
 
-function validateInputs (...args) {
-	
-	const validatedInputs = args.filter(item => item > 0).length;
+function validateInputs(...args) {
+  const validatedInputs = args[0].filter((item) => Number(item) > 0).length;
 
-	if (validatedInputs == args.length) {
-		return true
-	}
 
-	return false
+  if (validatedInputs == args[0].length) {
+    return true;
+  }
+
+  return false;
 }
 
-function hideShowResult(hide, show) {
-	hide.classList = ''
-	show.className += ' active-result'
+function hideShowResult() {
+  const allInfoBlocks = document.querySelectorAll(".result-block > div");
+  const activeTab = checkActiveTab();
+
+  toggleMainBorder();
+
+  allInfoBlocks.forEach((infoBlock) => {
+     if (
+      infoBlock.dataset.resultBlock === activeTab.dataset.tab &&
+      activeTab.dataset.resultsBlock === "show"
+    ) {
+      infoBlock.classList.add("active-result");
+    } else {
+      infoBlock.classList.remove("active-result");
+    }
+  });
 }
 
 function hideAllResult() {
-	avgConsumingForm.avgRes.className = ''
-	distanceConsumingForm.distConsumRes.className = ''
+  avgConsumingForm.avgRes.className = "";
+  distanceConsumingForm.distConsumRes.className = "";
 }
 
-function showMainBorder() {
-	mainBlock.className += ' main-border-hide'
+function toggleMainBorder() {
+  const activeTab = checkActiveTab();
+
+  if (activeTab.dataset.resultsBlock === "show") {
+    mainBlock.classList.add("main-border-hide");
+  } else {
+    mainBlock.classList.remove("main-border-hide");
+  }
 }
 
 // check active tab
 function checkActiveTab() {
-	let activeTab;
-	document.querySelectorAll('.tabs-wrapper div').forEach(item => {
-		if (item.classList.contains('active')) {
-			activeTab = item.id  
-		}
-	})
-	return activeTab
+  return document.querySelector(`[data-tab="${activeTabId}"]`);
 }
 
-function convertDecimals(...args) {
-	args.forEach(inputField => {
-		if (inputField.id != 'total_price') {
-			inputField.value = Number(inputField.value).toFixed(2)
-		}
-	})
-}
 
+function getActiveInputs() {
+
+  const allInputsIntab = document.querySelectorAll(
+    `.main [data-tabpanel="${activeTabId}"] input`
+  );
+  const allBottomBlockInputs = document.querySelectorAll(
+    `.result-block [data-result-block="${activeTabId}"] input`
+  );
+
+  return {allInputsIntab, allBottomBlockInputs}
+}
 
 
 function calculateResult() {
-		if (checkActiveTab() == 'average-kilometers-consuming') {
+  const activeTab = checkActiveTab();
 
-				if (validateInputs(avgConsumingForm.fuelConsumed.value, avgConsumingForm.distance.value, avgConsumingForm.fuelPrice.value)) {
+  const {allInputsIntab, allBottomBlockInputs} = getActiveInputs()
+
+  const arrayOfValues = Array.from(allInputsIntab).map((input) => input.value);
+
+  const hashmapAllInputsTab = Array.from(allInputsIntab).reduce(
+    (accum, input) => {
+      accum[input.name] = Number(input.value);
+      return accum;
+    },
+    {}
+  );
+
+  const hashmapAllInputsResult = Array.from(allBottomBlockInputs).reduce(
+    (accum, input) => {
+      accum[input.name] = input;
+      return accum;
+    },
+    {}
+  );
+
+  if (activeTab.id == "average-kilometers-consuming") {
+    if (validateInputs(arrayOfValues)) {
+
+      const { fuel_consumed, fuel_price, reached_distance } =
+        hashmapAllInputsTab;
+      const { average_consuming, avg_price_per_km, total_price } =
+        hashmapAllInputsResult;
+
+      average_consuming.value = ((fuel_consumed / reached_distance) *100).toFixed(2);
+      avg_price_per_km.value = ((fuel_price * Number(average_consuming.value)) /100).toFixed(2);
+      total_price.value = (Number(avg_price_per_km.value) * reached_distance).toFixed(2);
+
+      inputClear();
+
+      //   deactivate  calc button
+      activeCalcButton(allInputsIntab);
+
+      toggleAttribute("resultsBlock", "show");
+      hideShowResult();
+
+    } else {
+      alert("There is an empty input field");
+    }
+  } else {
+    if (validateInputs(arrayOfValues)) {
+      const { fuel_auto_consumed, fuel_price, travelling_distance } =
+        hashmapAllInputsTab;
+      const { avg_perKm, fuel_consuming, total_price, fuel_consuming_span, total_price_span} =
+        hashmapAllInputsResult;
+
+      fuel_consuming_span.value = `л/${travelling_distance} км`;
+      total_price_span.value = `грн/${travelling_distance} км`;
 
 
-					avgConsumingForm.averageConsuming.value = (Number(avgConsumingForm.fuelConsumed.value) / Number(avgConsumingForm.distance.value) * 100)
-					avgConsumingForm.avgPricePerKm.value = (Number(avgConsumingForm.fuelPrice.value) * Number(avgConsumingForm.averageConsuming.value) / 100)
-					avgConsumingForm.totalPrice.value = (Number(avgConsumingForm.avgPricePerKm.value) * Number(avgConsumingForm.distance.value))
+      fuel_consuming.value = ((travelling_distance / 100) * fuel_auto_consumed ).toFixed(2);
+      avg_perKm.value = ((fuel_price *fuel_auto_consumed) /100).toFixed(2);
+      total_price.value = (fuel_price *fuel_consuming.value).toFixed(2);
 
-					convertDecimals(avgConsumingForm.averageConsuming,
-									avgConsumingForm.avgPricePerKm,
-									avgConsumingForm.totalPrice)
+      inputClear();
+      activeCalcButton(allInputsIntab);
 
-					inputClear()
-					activeCalcButton(avgConsumingForm.averageConsumingInputs) 
+      toggleAttribute("resultsBlock", "show");
 
+      hideShowResult();
 
-					hideShowResult(distanceConsumingForm.distConsumRes, avgConsumingForm.avgRes)
+    } else {
+      alert("There is an empty input field");
+    }
+  }
 
-					showMainBorder()
-					avgConsumingForm.resultBlockShowed = true
-				
-				} else {
-					alert('There is an empty input field or negative number')
-				}
-			} else {
-				if (validateInputs(distanceConsumingForm.fuelConsumed.value, distanceConsumingForm.distance.value, distanceConsumingForm.fuelPrice.value)) {
-
-					distanceConsumingForm.fuelConsumingSpan.innerHTML = `л/${distanceConsumingForm.distance.value} км`
-					distanceConsumingForm.totalPriceSpan.innerHTML = `грн/${distanceConsumingForm.distance.value} км`
-					distanceConsumingForm.fuelConsuming.value =  (Number(distanceConsumingForm.distance.value) / 100 *  Number(distanceConsumingForm.fuelConsumed.value))
-					distanceConsumingForm.avgPricePerKm.value =  (Number(distanceConsumingForm.fuelPrice.value) * Number(distanceConsumingForm.fuelConsumed.value) / 100)
-					distanceConsumingForm.totalPrice.value = (Number(distanceConsumingForm.fuelPrice.value) * Number(distanceConsumingForm.fuelConsuming.value))
-
-					convertDecimals(distanceConsumingForm.fuelConsuming,
-									distanceConsumingForm.fuelConsuming,
-									distanceConsumingForm.totalPrice)
-					inputClear()
-					activeCalcButton(distanceConsumingForm.distanceConsumInputs) 
-
-
-					hideShowResult(avgConsumingForm.avgRes, distanceConsumingForm.distConsumRes)
-
-					showMainBorder()
-
-					distanceConsumingForm.resultBlockShowed = true
-				} else {
-					alert('There is an empty input field or negative number')
-				}
-			}
 }
 
-calculateBtn.addEventListener('click',() => {
-	calculateResult()
-})
+calculateBtn.addEventListener("click", () => {
+  calculateResult();
+});
 
-clearBtn.addEventListener('click', () => {
-	inputClear()
-})
-
+clearBtn.addEventListener("click", () => {
+  checkActiveTab().dataset.resultsBlock = "hide";
+  inputClear();
+});
 
 
 
