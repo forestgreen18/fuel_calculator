@@ -52,7 +52,7 @@ body {
     }
 
     li {
-      display: flex !important;
+      display: flex;
       align-items: center;
       justify-content: center;
 
@@ -83,6 +83,10 @@ body {
 
     li.active {
       @extend %active;
+    }
+
+    #distance-consuming {
+      display: flex;
     }
   }
 
@@ -151,8 +155,9 @@ body {
       display: none;
     }
 
-    .active {
-      display: block !important;
+    #average-kilometers-consuming.active,
+    #distance-consuming.active {
+      display: block;
     }
 
     .text p {
@@ -239,9 +244,9 @@ body {
     input[name="total_price_span"] {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
-      border-top-right-radius: $border-radius-input !important;
-      border-bottom-right-radius: $border-radius-input !important;
-      padding-left: 12px !important;
+      border-top-right-radius: $border-radius-input;
+      border-bottom-right-radius: $border-radius-input;
+      padding-left: 12px;
       font-weight: 400;
 
       // disable inputs
@@ -249,8 +254,9 @@ body {
     }
   }
 
-  .active-result {
-    display: block !important;
+  #average-kilometers-consuming.active-result,
+  #distance-consuming.active-result {
+    display: block;
   }
 }
 

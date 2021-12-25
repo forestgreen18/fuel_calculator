@@ -27,7 +27,7 @@ body {
       text-decoration: none;
       color: inherit; }
     .form-calculator .navigation li {
-      display: flex !important;
+      display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
@@ -45,6 +45,8 @@ body {
         border-radius: none;
         border-top-right-radius: 25px;
         border-top-left-radius: 0; }
+    .form-calculator .navigation #distance-consuming {
+      display: flex; }
   .form-calculator .inputs-block {
     color: #5029ee;
     font-weight: 500; }
@@ -86,8 +88,9 @@ body {
     background: #fff; }
     .form-calculator .main .tab {
       display: none; }
-    .form-calculator .main .active {
-      display: block !important; }
+    .form-calculator .main #average-kilometers-consuming.active,
+    .form-calculator .main #distance-consuming.active {
+      display: block; }
     .form-calculator .main .text p {
       margin: 20px;
       font-weight: 300; }
@@ -139,13 +142,14 @@ body {
     .form-calculator .result-block input[name="total_price_span"] {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
-      border-top-right-radius: 16px !important;
-      border-bottom-right-radius: 16px !important;
-      padding-left: 12px !important;
+      border-top-right-radius: 16px;
+      border-bottom-right-radius: 16px;
+      padding-left: 12px;
       font-weight: 400;
       pointer-events: none; }
-  .form-calculator .active-result {
-    display: block !important; }
+  .form-calculator #average-kilometers-consuming.active-result,
+  .form-calculator #distance-consuming.active-result {
+    display: block; }
 
 .hide {
   display: none; }
