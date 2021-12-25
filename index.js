@@ -1,25 +1,25 @@
-const element = document.querySelector('.navigation');
+const element = document.querySelector(".navigation");
 
-element.addEventListener('click', onTabClick, false);
-window.addEventListener('load', function () {
+element.addEventListener("click", onTabClick, false);
+window.addEventListener("load", function () {
   changeCalcButton();
 });
 
 // buttons
-const clearBtn = document.querySelector('#clear');
-const calculateBtn = document.querySelector('#calculate');
+const clearBtn = document.querySelector("#clear");
+const calculateBtn = document.querySelector("#calculate");
 
-const mainBlock = document.querySelector('.main');
+const mainBlock = document.querySelector(".main");
 
-calculateBtn.addEventListener('click', () => {
+calculateBtn.addEventListener("click", () => {
   calculateResult();
 });
 
-clearBtn.addEventListener('click', () => {
-  checkActiveTab().dataset.resultsBlock = 'hide';
+clearBtn.addEventListener("click", () => {
+  checkActiveTab().dataset.resultsBlock = "hide";
   inputClear();
 });
-let activeTabId = '1';
+let activeTabId = "1";
 
 // Changing tabs
 function onTabClick(event) {
@@ -27,8 +27,8 @@ function onTabClick(event) {
 
   activeTabId = userSelectedTabId;
 
-  let tabs = document.querySelectorAll('.navigation li');
-  let tabPanels = document.querySelectorAll('.tabs-wrapper div');
+  let tabs = document.querySelectorAll(".navigation li");
+  let tabPanels = document.querySelectorAll(".tabs-wrapper div");
 
   //   display results block depending on tab show attribute
   hideShowResult();
@@ -37,18 +37,18 @@ function onTabClick(event) {
   // deactive existing active tab and panel
   tabs.forEach((tab) => {
     if (tab.dataset.tab === userSelectedTabId) {
-      tab.classList.add('active');
+      tab.classList.add("active");
     } else {
-      tab.classList.remove('active');
+      tab.classList.remove("active");
     }
   });
 
   tabPanels.forEach((tabPanel) => {
     if (tabPanel.dataset.tabpanel === userSelectedTabId) {
       calculateByEnter();
-      tabPanel.classList.add('active');
+      tabPanel.classList.add("active");
     } else {
-      tabPanel.classList.remove('active');
+      tabPanel.classList.remove("active");
     }
   });
 }
@@ -60,10 +60,18 @@ const toggleAttribute = (attributeName, value) => {
 
 // Let user calculate by pressing "Enter" button
 function calculateByEnter() {
-  getActiveInputs()['allInputsIntab'].forEach((input) => {
-    input.addEventListener('keydown', (event) => {
-      if (event.code === 'Enter' || event.code === 'NumpadEnter') {
-        calculateResult();
+
+  let valuesOfInputs
+
+  getActiveInputs()["allInputsIntab"].forEach((input) => {
+
+
+    input.addEventListener("keydown", (event) => {
+      valuesOfInputs = getArrayOfValues(getActiveInputs()["allInputsIntab"])
+
+
+      if (validateInputs(...valuesOfInputs) && (event.code === "Enter" || event.code === "NumpadEnter")) {
+          calculateResult();
       }
     });
   });
@@ -72,9 +80,6 @@ function calculateByEnter() {
 calculateByEnter();
 
 function changeCalcButton() {
-
-
-
   // Check button when we change tab
   const { allInputsIntab: arrayOfInputs } = getActiveInputs();
   // Check if there are filled inputs
@@ -87,26 +92,25 @@ function changeCalcButton() {
   });
 
   if (filledInputs < arrayOfInputs.length) {
-    calculateBtn.classList.remove('active-btn');
+    calculateBtn.classList.remove("active-btn");
     calculateBtn.disabled = true;
   } else {
-    calculateBtn.classList.add('active-btn');
+    calculateBtn.classList.add("active-btn");
     calculateBtn.disabled = false;
   }
 
-
-  // Add event to all inputs 
+  // Add event to all inputs
   arrayOfInputs.forEach((input) => {
-    input.addEventListener('input', () => {
+    input.addEventListener("input", () => {
       let values = [];
       arrayOfInputs.forEach((itm) => values.push(itm.value.trim()));
 
-      calculateBtn.disabled = values.includes('') || values.some((v) => v < 0);
+      calculateBtn.disabled = values.includes("") || values.some((v) => v < 0);
 
       if (!calculateBtn.disabled) {
-        calculateBtn.className = 'btn active-btn';
+        calculateBtn.className = "btn active-btn";
       } else {
-        calculateBtn.className = 'btn';
+        calculateBtn.className = "btn";
       }
     });
   });
@@ -117,21 +121,22 @@ function inputClear() {
     `.result-block #${checkActiveTab().id}`
   );
 
-  const {allInputsIntab :currentInputsBlock} = getActiveInputs()
+  const { allInputsIntab: currentInputsBlock } = getActiveInputs();
 
   currentInputsBlock.forEach((input) => {
-    input.value = '';
+    input.value = "";
   });
-  activeBottomBlock.classList.remove('active-result');
-  mainBlock.classList.remove('main-border-hide');
+  activeBottomBlock.classList.remove("active-result");
+  mainBlock.classList.remove("main-border-hide");
 
   calculateBtn.disabled = true;
 }
 
 function validateInputs(...args) {
-  const validatedInputs = args[0].filter((item) => Number(item) > 0).length;
 
-  if (validatedInputs == args[0].length) {
+  const validatedInputs = args.filter((item) => Number(item) > 0).length;
+
+  if (validatedInputs == args.length) {
     return true;
   }
 
@@ -139,7 +144,7 @@ function validateInputs(...args) {
 }
 
 function hideShowResult() {
-  const allInfoBlocks = document.querySelectorAll('.result-block > div');
+  const allInfoBlocks = document.querySelectorAll(".result-block > div");
   const activeTab = checkActiveTab();
 
   toggleMainBorder();
@@ -147,11 +152,11 @@ function hideShowResult() {
   allInfoBlocks.forEach((infoBlock) => {
     if (
       infoBlock.dataset.resultBlock === activeTab.dataset.tab &&
-      activeTab.dataset.resultsBlock === 'show'
+      activeTab.dataset.resultsBlock === "show"
     ) {
-      infoBlock.classList.add('active-result');
+      infoBlock.classList.add("active-result");
     } else {
-      infoBlock.classList.remove('active-result');
+      infoBlock.classList.remove("active-result");
     }
   });
 }
@@ -159,10 +164,10 @@ function hideShowResult() {
 function toggleMainBorder() {
   const activeTab = checkActiveTab();
 
-  if (activeTab.dataset.resultsBlock === 'show') {
-    mainBlock.classList.add('main-border-hide');
+  if (activeTab.dataset.resultsBlock === "show") {
+    mainBlock.classList.add("main-border-hide");
   } else {
-    mainBlock.classList.remove('main-border-hide');
+    mainBlock.classList.remove("main-border-hide");
   }
 }
 
@@ -182,12 +187,16 @@ function getActiveInputs() {
   return { allInputsIntab, allBottomBlockInputs };
 }
 
+function getArrayOfValues (arrayOfInputs) {
+  return Array.from(arrayOfInputs).map((input) => input.value);
+}
+
 function calculateResult() {
   const activeTab = checkActiveTab();
 
   const { allInputsIntab, allBottomBlockInputs } = getActiveInputs();
 
-  const arrayOfValues = Array.from(allInputsIntab).map((input) => input.value);
+  const arrayOfValues = getArrayOfValues(allInputsIntab)
 
   const hashmapAllInputsTab = Array.from(allInputsIntab).reduce(
     (accum, input) => {
@@ -205,8 +214,8 @@ function calculateResult() {
     {}
   );
 
-  if (activeTab.id == 'average-kilometers-consuming') {
-    if (validateInputs(arrayOfValues)) {
+  if (activeTab.id == "average-kilometers-consuming") {
+    if (validateInputs(...arrayOfValues)) {
       const { fuel_consumed, fuel_price, reached_distance } =
         hashmapAllInputsTab;
       const { average_consuming, avg_price_per_km, total_price } =
@@ -229,13 +238,15 @@ function calculateResult() {
       //   deactivate  calc button
       changeCalcButton(allInputsIntab);
 
-      toggleAttribute('resultsBlock', 'show');
+      toggleAttribute("resultsBlock", "show");
       hideShowResult();
     } else {
-      alert('There is an empty input field');
+      console.log(111);
+
+      alert("There is an empty input field");
     }
   } else {
-    if (validateInputs(arrayOfValues)) {
+    if (validateInputs(...arrayOfValues)) {
       const { fuel_auto_consumed, fuel_price, travelling_distance } =
         hashmapAllInputsTab;
       const {
@@ -259,11 +270,12 @@ function calculateResult() {
       inputClear();
       changeCalcButton(allInputsIntab);
 
-      toggleAttribute('resultsBlock', 'show');
+      toggleAttribute("resultsBlock", "show");
 
       hideShowResult();
     } else {
-      alert('There is an empty input field');
+      console.log(111);
+      alert("There is an empty input field");
     }
   }
 }
